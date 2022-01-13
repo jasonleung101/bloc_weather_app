@@ -1,5 +1,6 @@
 import 'package:bloc_weather_app/bloc/landing_selected_date_cubit.dart';
 import 'package:bloc_weather_app/bloc/weather_cubit.dart';
+import 'package:bloc_weather_app/constant/color.dart';
 import 'package:bloc_weather_app/model/one_call_weather.dart';
 import 'package:bloc_weather_app/model/weather.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -39,7 +40,72 @@ class _LandingPageState extends State<LandingPage> {
                     ),
                   ),
                   Expanded(
-                    child: Container(),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: 6,
+                            physics: const ClampingScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 12),
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.05),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(45),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16, horizontal: 24),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Text(
+                                          DateFormat("ha").format(
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                              _data.hourly![index * 3].dt! *
+                                                  1000,
+                                            ),
+                                          ),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        CachedNetworkImage(
+                                          imageUrl: Uri.encodeFull(
+                                            "http://openweathermap.org/img/wn/${_data.hourly?[index * 3].weather?[0].icon}.png",
+                                          ),
+                                          placeholder: (context, url) =>
+                                              const CircularProgressIndicator
+                                                  .adaptive(),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
+                                        Text(
+                                          (_data.hourly![index * 3].temp
+                                                      ?.toStringAsFixed(0) ??
+                                                  'N/A') +
+                                              "°C",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Spacer(),
+                      ],
+                    ),
                   ),
                 ],
               );
