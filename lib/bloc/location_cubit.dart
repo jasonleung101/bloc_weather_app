@@ -23,7 +23,7 @@ class LocationCubit extends Cubit<LocationState> {
       await weatherCubit.getWeather(
           _position.latitude.toString(), _position.longitude.toString());
       countryListCubit
-          .addCurrentLocationToList(weatherCubit.state.weatherResponse);
+          .addCurrentLocationToList(weatherCubit.state.oneCallWeather);
     } catch (e) {
       print(e);
       emit(const LocationError('Failed to get location'));
